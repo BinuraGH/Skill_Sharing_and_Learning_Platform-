@@ -22,7 +22,6 @@ const BrowseCourses = () => {
             return { ...data, progress: data.progressPercentage };
           })
         );
-
         setPlans(enriched);
         setFilteredPlans(enriched);
       } catch (err) {

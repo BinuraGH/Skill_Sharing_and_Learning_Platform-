@@ -24,6 +24,5 @@ public class LearningPlan {
     private String thumbnailUrl;
     private String courseDescription;
     private List<Topic> topics;
-
     /*  */
 }

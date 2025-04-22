@@ -111,7 +111,6 @@ public class LearningPlanService {
         if (followedUserIds.isEmpty()) {
             return List.of(); // Return empty list if user follows no one
         }
-    
         return repository.findByUserIdIn(followedUserIds);
     }  
 }

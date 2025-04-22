@@ -12,5 +12,4 @@ public class NotificationService {
     public void notifyPlanCompletion(String userId, String planTitle) {
         logger.info("📣 Notification: User '{}' has completed the plan '{}'", userId, planTitle);
     }
-
 }

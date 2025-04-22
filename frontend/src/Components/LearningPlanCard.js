@@ -20,7 +20,6 @@ const LearningPlanCard = ({ plan }) => {
   const handleClick = () => {
     navigate(`/plans/${id}`);
   };
-
   return (
     <div className="learning-plan-card" onClick={handleClick} style={{ cursor: 'pointer' }}>
       <img

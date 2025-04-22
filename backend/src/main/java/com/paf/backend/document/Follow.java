@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Follow {
     @Id
     private String id;
-
     private String followerId;  // who is following
     private String followedId;  // who is being followed
 }

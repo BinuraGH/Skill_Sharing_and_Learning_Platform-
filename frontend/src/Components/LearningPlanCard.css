@@ -8,7 +8,6 @@
     display: flex;
     flex-direction: column;
   }
-  
   .learning-plan-card:hover {
     transform: scale(1.03);
   }

@@ -18,7 +18,6 @@ public class Enrollment {
     private String userId;
     private String planId;
 
-
     public Enrollment(String userId, String planId) {
         this.userId = userId;
         this.planId = planId;

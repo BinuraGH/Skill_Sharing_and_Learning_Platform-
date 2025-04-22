@@ -10,4 +10,5 @@ import com.paf.backend.document.Enrollment;
 public interface EnrollmentRepository extends MongoRepository<Enrollment, String> {
     List<Enrollment> findByUserId(String userId);
     boolean existsByUserIdAndPlanId(String userId, String planId);
+    
 }

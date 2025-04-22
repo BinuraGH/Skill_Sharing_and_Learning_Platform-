@@ -31,7 +31,6 @@ const CourseDetailPage = () => {
     fetchPlan();
   }, [id]);
   
-
   const handleMarkComplete = async (index) => {
     await fetch(`http://localhost:8080/api/plans/${planId}/topics/${index}/complete`, {
       method: "PATCH",

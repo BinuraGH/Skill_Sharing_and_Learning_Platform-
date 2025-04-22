@@ -25,12 +25,10 @@ public class EnrollmentService {
         Enrollment enrollment = new Enrollment(userId, planId);
         return repository.save(enrollment);
     }
-
     //Return all enrollment records by user
     public List<Enrollment> getEnrollmentsByUser(String userId) {
         return repository.findByUserId(userId);
     }
-
     //Return full learning plans a user is enrolled in
     public List<LearningPlan> getEnrolledPlans(String userId) {
         List<Enrollment> enrollments = repository.findByUserId(userId);
