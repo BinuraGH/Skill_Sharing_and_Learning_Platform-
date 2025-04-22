@@ -11,5 +11,4 @@ public class Topic {
     private String description;
     private boolean completed;
     private String videoUrl;
-
 }
