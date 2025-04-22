@@ -1,47 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import LearningPlanCard from '../Components/LearningPlanCard';
+import './MyLearningPlans.css';
 
 const MyLearningPlans = () => {
   const [plansWithProgress, setPlansWithProgress] = useState([]);
+  const userId = "user123"; // Replace this later with your auth user
 
   useEffect(() => {
-    const fetchPlans = async () => {
+    const fetchEnrolledPlans = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/plans/user/user123`);
-        const plans = await res.json();
+        // Step 1: Get all enrollments for this user
+        const enrollmentsRes = await fetch(`http://localhost:8080/api/enrollments/${userId}`);
+        const enrollments = await enrollmentsRes.json();
 
-        // Fetch progress for each plan
-        const enriched = await Promise.all(
-          plans.map(async (plan) => {
-            const progressRes = await fetch(`http://localhost:8080/api/plans/${plan.id}/progress`);
-            const { progressPercentage } = await progressRes.json();
+        // Step 2: For each enrollment, fetch the plan and progress
+        const enrichedPlans = await Promise.all(
+          enrollments.map(async (enrollment) => {
+            const planRes = await fetch(`http://localhost:8080/api/plans/${enrollment.planId}/progress`);
+            const planData = await planRes.json();
 
             return {
-              ...plan,
-              progress: progressPercentage,
+              ...planData,
+              progress: planData.progressPercentage,
             };
           })
         );
 
-        setPlansWithProgress(enriched);
+        setPlansWithProgress(enrichedPlans);
       } catch (err) {
-        console.error("❌ Error loading plans:", err);
+        console.error("❌ Error fetching enrolled plans:", err);
       }
     };
 
-    fetchPlans();
+    fetchEnrolledPlans();
   }, []);
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">My Learning Plans</h1>
-      <div className="flex flex-wrap gap-6">
+      <h1 className="text-3xl font-bold mb-6">My Enrolled Learning Plans</h1>
+
+      <div className="horizontal-scroll">
         {plansWithProgress.length > 0 ? (
           plansWithProgress.map((plan) => (
-            <LearningPlanCard key={plan.id} plan={plan} />
+            <div className="scroll-card" key={plan.id}>
+              <LearningPlanCard plan={plan} />
+            </div>
           ))
         ) : (
-          <p className="text-gray-500">No learning plans found.</p>
+          <p className="text-gray-500">You have not enrolled in any learning plans yet.</p>
         )}
       </div>
     </div>

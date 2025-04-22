@@ -7,6 +7,7 @@ const CourseDetailPage = () => {
   const { id } = useParams();
   const [plan, setPlan] = useState(null);
   const [progress, setProgress] = useState(0);
+  const [isEnrolled, setIsEnrolled] = useState(false);
 
   useEffect(() => {
     const fetchPlan = async () => {
@@ -15,17 +16,25 @@ const CourseDetailPage = () => {
         const data = await res.json();
         setPlan(data);
         setProgress(data.progressPercentage);
+  
+        // ✅ Check enrollment
+        const userId = "user123"; // Replace with real logged-in user
+        const enrollmentsRes = await fetch(`http://localhost:8080/api/enrollments/${userId}`);
+        const enrollments = await enrollmentsRes.json();
+        const enrolled = enrollments.some((e) => e.planId === id);
+        setIsEnrolled(enrolled);
       } catch (err) {
         console.error("❌ Error loading plan details:", err);
       }
     };
-
+  
     fetchPlan();
   }, [id]);
+  
 
   const handleMarkComplete = async (index) => {
-    await fetch(`http://localhost:8080/api/plans/${id}/topics/${index}/complete`, {
-      method: 'PATCH',
+    await fetch(`http://localhost:8080/api/plans/${planId}/topics/${index}/complete`, {
+      method: "PATCH",
     });
 
     const res = await fetch(`http://localhost:8080/api/plans/${id}/progress`);
@@ -61,7 +70,29 @@ const CourseDetailPage = () => {
         {isPaid ? `$${price}` : "Free"} · {status}
       </p>
       <p className="mb-4 text-gray-700">{courseDescription || "No course description provided."}</p>
+      {!isEnrolled ? (
+        <button
+          onClick={async () => {
+            const res = await fetch(`http://localhost:8080/api/enrollments?userId=user123&planId=${id}`, {
+              method: "POST"
+            });
 
+            if (res.ok) {
+              alert("✅ Successfully enrolled!");
+              setIsEnrolled(true);
+            } else {
+              alert("❌ Already enrolled or failed.");
+            }
+          }}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4"
+        >
+          Enroll in this Course
+        </button>
+      ) : (
+        <p className="text-green-600 font-semibold mb-4">
+          You are enrolled in this course 🎉
+        </p>
+      )}
       <div className="bg-gray-200 h-3 rounded-full mb-2">
         <div className="bg-green-500 h-3 rounded-full" style={{ width: `${progress}%` }}></div>
       </div>
