@@ -1,37 +1,22 @@
-package com.paf.backend.document;
+package com.paf.backend.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "skill_sharing")
-public class SkillSharing {
-
-    @Id
-    private String id;
+public class SkillShareDto {
     private String userId;
-    private List<String> media; // Size limit will be handled in validation
+    private List<String> media;
     private String description;
     private LocalDateTime dateTime;
 
-    public SkillSharing() {
+    public SkillShareDto() {
     }
 
-    public SkillSharing(String userId, List<String> media, String description, LocalDateTime dateTime) {
+    public SkillShareDto(String userId, List<String> media, String description, LocalDateTime dateTime) {
         this.userId = userId;
         this.media = media;
         this.description = description;
         this.dateTime = dateTime;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUserId() {
