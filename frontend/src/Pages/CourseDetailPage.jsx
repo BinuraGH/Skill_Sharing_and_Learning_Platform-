@@ -92,9 +92,8 @@ const CourseDetailPage = () => {
 
             <button
               onClick={() => handleMarkComplete(index)}
-              className={`px-4 py-2 text-white mt-2 rounded ${
-                topic.completed ? 'bg-green-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
-              }`}
+              className={`px-4 py-2 text-white mt-2 rounded ${topic.completed ? 'bg-green-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+                }`}
               disabled={topic.completed}
             >
               {topic.completed ? "Completed" : "Mark as Completed"}
