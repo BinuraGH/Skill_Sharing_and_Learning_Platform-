@@ -1,11 +1,11 @@
 package com.paf.backend.controller;
 
 import com.paf.backend.document.SkillSharing;
-import com.paf.backend.dto.SkillShareDto;
 import com.paf.backend.service.SkillShareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +18,17 @@ public class SkillSharingController {
     @Autowired
     private SkillShareService service;
 
-    @PostMapping
-    public ResponseEntity<SkillSharing> create(@RequestBody SkillShareDto dto) {
-        SkillSharing created = service.createSkillSharing(dto);
-        return ResponseEntity.ok(created);
+    @PostMapping(consumes = { "multipart/form-data" })
+    public ResponseEntity<?> create(
+            @RequestParam("userId") String userId,
+            @RequestParam("description") String description,
+            @RequestParam(value = "media", required = false) List<MultipartFile> mediaFiles) {
+        try {
+            SkillSharing created = service.createSkillSharing(userId, description, mediaFiles);
+            return ResponseEntity.ok(created);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -35,8 +42,8 @@ public class SkillSharingController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SkillSharing> update(@PathVariable String id, @RequestBody SkillShareDto dto) {
-        Optional<SkillSharing> updated = service.updateSkillSharing(id, dto);
+    public ResponseEntity<SkillSharing> update(@PathVariable String id, @RequestParam String description) {
+        Optional<SkillSharing> updated = service.updateSkillSharing(id, description);
         return updated.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

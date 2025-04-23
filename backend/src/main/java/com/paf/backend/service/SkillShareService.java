@@ -1,14 +1,17 @@
 package com.paf.backend.service;
 
+import com.google.firebase.cloud.StorageClient;
 import com.paf.backend.document.SkillSharing;
-import com.paf.backend.dto.SkillShareDto;
 import com.paf.backend.repository.SkillShareRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SkillShareService {
@@ -16,17 +19,23 @@ public class SkillShareService {
     @Autowired
     private SkillShareRepository repository;
 
-    public SkillSharing createSkillSharing(SkillShareDto dto) {
-        if (dto.getMedia() != null && dto.getMedia().size() > 3) {
-            throw new IllegalArgumentException("Media list can contain at most 3 items.");
+    public SkillSharing createSkillSharing(String userId, String description, List<MultipartFile> files)
+            throws Exception {
+        if (files != null && files.size() > 3) {
+            throw new IllegalArgumentException("You can upload up to 3 media files.");
         }
 
-        SkillSharing skillSharing = new SkillSharing(
-                dto.getUserId(),
-                dto.getMedia(),
-                dto.getDescription(),
-                java.time.LocalDateTime.now());
+        List<String> mediaUrls = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+            StorageClient.getInstance().bucket().create(fileName, file.getBytes(), file.getContentType());
+            String mediaUrl = "https://firebasestorage.googleapis.com/v0/b/" +
+                    StorageClient.getInstance().bucket().getName() +
+                    "/o/" + fileName.replaceAll("/", "%2F") + "?alt=media";
+            mediaUrls.add(mediaUrl);
+        }
 
+        SkillSharing skillSharing = new SkillSharing(userId, mediaUrls, description, LocalDateTime.now());
         return repository.save(skillSharing);
     }
 
@@ -38,14 +47,12 @@ public class SkillShareService {
         return repository.findByUserId(userId);
     }
 
-    public Optional<SkillSharing> updateSkillSharing(String id, SkillShareDto dto) {
+    public Optional<SkillSharing> updateSkillSharing(String id, String description) {
         Optional<SkillSharing> optional = repository.findById(id);
         if (optional.isPresent()) {
             SkillSharing existing = optional.get();
-            existing.setUserId(dto.getUserId());
-            existing.setMedia(dto.getMedia());
-            existing.setDescription(dto.getDescription());
-            existing.setDateTime(java.time.LocalDateTime.now());
+            existing.setDescription(description);
+            existing.setDateTime(LocalDateTime.now());
             return Optional.of(repository.save(existing));
         }
         return Optional.empty();
