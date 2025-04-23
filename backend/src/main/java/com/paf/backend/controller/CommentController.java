@@ -1,5 +1,11 @@
 package com.paf.backend.controller;
 
+import com.paf.backend.document.Comment;
+import com.paf.backend.service.CommentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/comments")
@@ -33,5 +39,4 @@ public class CommentController {
         return commentService.deleteCommentById(id);
     }
 }
-
 
