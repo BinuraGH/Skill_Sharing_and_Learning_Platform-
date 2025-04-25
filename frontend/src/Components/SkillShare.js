@@ -149,7 +149,7 @@ const SkillShare = () => {
                             onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
 
-                        <div>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
                             <label className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded cursor-pointer hover:bg-gray-200">
                                 <span>Add Media Files</span>
                                 <FaPhotoVideo />
@@ -161,6 +161,30 @@ const SkillShare = () => {
                                     onChange={handleFileChange}
                                 />
                             </label>
+                            {mediaFiles.length > 0 && (
+                                <div className="flex flex-wrap gap-3">
+                                    {mediaFiles.map((file, idx) => {
+                                        const url = URL.createObjectURL(file);
+                                        const isVideo = file.type.includes("video");
+
+                                        return isVideo ? (
+                                            <video
+                                                key={idx}
+                                                src={url}
+                                                controls
+                                                className="w-16 h-16 object-cover rounded"
+                                            />
+                                        ) : (
+                                            <img
+                                                key={idx}
+                                                src={url}
+                                                alt={`preview-${idx}`}
+                                                className="w-16 h-16 object-cover rounded"
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
 
                         <button
