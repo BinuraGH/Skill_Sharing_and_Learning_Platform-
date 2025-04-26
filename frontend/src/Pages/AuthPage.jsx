@@ -10,7 +10,7 @@ const AuthPage = () => {
     <div className="auth-container">
       <h1>CodeShare</h1>
       <p>Connect with developers, share your skills, and grow together</p>
-      <TabSwitcher activeTab={activeTab} setActiveTab={setActiveTab} />
+      <TabSwitcher activeTab={activeTab} setActiveTab={setActiveTab} page="auth" />
       <AuthForm type={activeTab} />
     </div>
   );
