@@ -10,6 +10,7 @@ import com.paf.backend.repository.LearningPlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,10 +26,9 @@ public class LearningPlanService {
     private final NotificationService notificationService;
     private final FollowRepository followRepository;
 
-
     public LearningPlan createPlan(LearningPlanDto dto) {
         LearningPlan plan = modelMapper.map(dto, LearningPlan.class);
-        plan.setId(null); // MongoDB will auto-generate the ID
+        plan.setId(null);
         plan.setStatus("In Progress");
         return repository.save(plan);
     }
@@ -45,16 +45,32 @@ public class LearningPlanService {
         return repository.findById(id);
     }
 
-    public LearningPlan updatePlan(String id, LearningPlanDto dto, String requestingUserId) {
-        LearningPlan plan = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Plan not found"));
+    public ResponseEntity<?> updatePlan(String id, LearningPlanDto dto) {
+        Optional<LearningPlan> existingPlan = repository.findById(id);
 
-        if (!plan.getUserId().equals(requestingUserId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorized to update this plan");
+        if (existingPlan.isPresent()) {
+            LearningPlan updatePlan = existingPlan.get();
+
+            // Validate that at least one field is being updated
+            if (dto.getTitle() == null && dto.getDescription() == null &&
+                dto.getThumbnailUrl() == null && dto.getCourseDescription() == null &&
+                dto.getTopics() == null && dto.getPrice() == null && dto.getIsPaid() == null) {
+                return new ResponseEntity<>("No fields provided to update", HttpStatus.BAD_REQUEST);
+            }
+
+            // Only update fields if not null
+            if (dto.getTitle() != null) updatePlan.setTitle(dto.getTitle());
+            if (dto.getDescription() != null) updatePlan.setDescription(dto.getDescription());
+            if (dto.getThumbnailUrl() != null) updatePlan.setThumbnailUrl(dto.getThumbnailUrl());
+            if (dto.getCourseDescription() != null) updatePlan.setCourseDescription(dto.getCourseDescription());
+            if (dto.getTopics() != null) updatePlan.setTopics(dto.getTopics());
+            if (dto.getPrice() != null) updatePlan.setPrice(dto.getPrice());
+            if (dto.getIsPaid() != null) updatePlan.setPaid(dto.getIsPaid());
+
+            return new ResponseEntity<>(repository.save(updatePlan), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Learning Plan Update Error: Not Found", HttpStatus.NOT_FOUND);
         }
-
-        modelMapper.map(dto, plan);
-        return repository.save(plan);
     }
 
     public void deletePlan(String id, String requestingUserId) {
@@ -72,7 +88,7 @@ public class LearningPlanService {
         LearningPlan plan = repository.findById(planId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Plan not found"));
 
-        if (index < 0 || index >= plan.getTopics().size()) {
+        if (plan.getTopics() == null || index < 0 || index >= plan.getTopics().size()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid topic index");
         }
 
@@ -99,18 +115,20 @@ public class LearningPlanService {
         dto.setProgressPercentage(progress);
         return dto;
     }
+
     public List<LearningPlan> getPlansByPaymentStatus(boolean isPaid) {
         return repository.findByIsPaid(isPaid);
     }
+
     public List<LearningPlan> getPlansByFollowedUsers(String userId) {
         List<Follow> follows = followRepository.findByFollowerId(userId);
         List<String> followedUserIds = follows.stream()
             .map(Follow::getFollowedId)
             .toList();
-    
+
         if (followedUserIds.isEmpty()) {
-            return List.of(); // Return empty list if user follows no one
+            return List.of();
         }
         return repository.findByUserIdIn(followedUserIds);
-    }  
+    }
 }

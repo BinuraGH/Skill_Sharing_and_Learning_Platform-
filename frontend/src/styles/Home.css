@@ -175,4 +175,91 @@
     border-radius: 50%;
     object-fit: cover;
   }
+  .manage-btn {
+    background-color: #8b5cf6;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .manage-learning {
+    padding: 40px;
+  }
+  
+  .plan-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .plan-tabs button {
+    padding: 8px 16px;
+    border: none;
+    background: #eee;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .plan-tabs button.active-tab {
+    background: #8b5cf6;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .plans-info {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ddd;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .new-plan-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .create-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px #ccc;
+  }
+  
+  .create-form input,
+  .create-form textarea {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .create-btn {
+    background: #8b5cf6;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .plan-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 10px #ccc;
+  }
   

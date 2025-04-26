@@ -14,8 +14,8 @@ public class LearningPlanDto {
     private String userId;
     private String title;
     private String description;
-    private boolean isPaid;
-    private double price;
+    private Boolean isPaid;
+    private Double price;
     private String thumbnailUrl;
     private String courseDescription;
     private List<Topic> topics;
