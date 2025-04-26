@@ -1,5 +1,9 @@
 package com.paf.backend.service;
 
+<<<<<<< HEAD
+=======
+import java.sql.Date;
+>>>>>>> ac7f14f2f5d4c446862ca0b8c92d6f84b38ca3a5
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +23,7 @@ public class ProgressUpdateService {
     private ProgressUpdateRepository repository;
 
     // ✅ Create new progress update
+<<<<<<< HEAD
     public ProgressUpdate createProgressUpdate(ProgressUpdateDto dto){
         ProgressUpdate progress = new ProgressUpdate (
             dto.getUserId(),
@@ -28,6 +33,18 @@ public class ProgressUpdateService {
             dto.getImgLink(),
             dto.getLikedBy()
         );
+=======
+    public ProgressUpdate createProgressUpdate(ProgressUpdateDto dto) {
+        ProgressUpdate progress = new ProgressUpdate(
+                dto.getUserId(),
+                dto.getTitle(),
+                dto.getCaption(),
+                "In Progress", // default status
+                dto.getCreatedAt(),
+                dto.getUpdatedAt(),
+                dto.getImgLink(),
+                dto.getLikedBy());
+>>>>>>> ac7f14f2f5d4c446862ca0b8c92d6f84b38ca3a5
 
         ProgressUpdate saved = repository.save(progress);
         System.out.println("Inserted Progress Update with ID: " + saved.getId());
@@ -35,12 +52,12 @@ public class ProgressUpdateService {
     }
 
     // ✅ Get all progress updates for a user
-    public List<ProgressUpdate> getProgressUpdatesByUser (String userId){
+    public List<ProgressUpdate> getProgressUpdatesByUser(String userId) {
         return repository.findByUserId(userId);
     }
 
     // ✅ Get a single progress update by ID
-    public Optional<ProgressUpdate> getProgressUpdate (String id){
+    public Optional<ProgressUpdate> getProgressUpdate(String id) {
         return repository.findById(id);
     }
 
@@ -75,7 +92,7 @@ public class ProgressUpdateService {
 
     
     // ✅ Delete a progress update
-        public boolean deleteProgressUpdate(String id) {
+    public boolean deleteProgressUpdate(String id) {
         Optional<ProgressUpdate> optional = repository.findById(id);
         if (optional.isPresent()) {
             repository.deleteById(id);
@@ -83,5 +100,5 @@ public class ProgressUpdateService {
         }
         return false;
     }
-    
+
 }
