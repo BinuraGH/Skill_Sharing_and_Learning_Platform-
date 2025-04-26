@@ -67,27 +67,12 @@ const CreateProgressUpdate = () => {
           placeholder="https://example.com/image.png"
         />
 
-        <label>Liked By (comma-separated user IDs)</label>
-        <input 
-          type="text"
-          value={likedBy}
-          onChange={(e) => setLikedBy(e.target.value)}
-          placeholder="e.g., user1,user2,user3"
-        />
-
         <label>Template</label>
         <select value={template} onChange={(e) => setTemplate(e.target.value)}>
           <option value="Completed tutorial">Completed tutorial</option>
           <option value="Started course">Started course</option>
           <option value="Completed project">Completed project</option>
         </select>
-
-        <label>Description</label>
-        <textarea 
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Just finished the tutorial..."
-        />
 
         <div className="btn-group">
           <button className="btn primary" onClick={handleCreate}>Create</button>

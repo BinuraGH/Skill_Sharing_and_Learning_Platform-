@@ -1,28 +1,21 @@
 package com.paf.backend.dto;
 
 import java.util.List;
-import java.util.Date;
 
 public class ProgressUpdateDto {
     private String id;
     private String userId;
     private String title;
     private String caption;
-    private String status;
-    private Date createdAt;
-    private Date updatedAt;
     private List<String> imgLink;
     private List<String> likedBy;
 
     public ProgressUpdateDto (){}
 
-    public ProgressUpdateDto (String userId, String title, String caption, String status,  Date createdAt, Date updatedAt, List<String> imgLink, List<String> likedBy){
+    public ProgressUpdateDto (String userId, String title, String caption, List<String> imgLink, List<String> likedBy){
         this.userId = userId;
         this.title = title;
         this.caption = caption;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
         this.imgLink = imgLink;
         this.likedBy = likedBy;
     }
@@ -41,18 +34,6 @@ public class ProgressUpdateDto {
 
     public String getCaption(){
         return caption;
-    }
-
-    public String getStatus(){
-        return status;
-    }
-
-    public Date getCreatedAt(){
-        return createdAt;
-    }
-
-    public Date getUpdatedAt(){
-        return updatedAt;
     }
 
     public List<String> getImgLink(){
@@ -77,18 +58,6 @@ public class ProgressUpdateDto {
 
     public void setCaption(String caption){
         this.caption = caption;
-    }
-
-    public void setStatus(String status){
-        this.status = status;
-    }
-
-    public void setCreatedAt(Date createdAt){
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt){
-        this.updatedAt = updatedAt;
     }
 
     public void setImgLink(List<String> imgLink){

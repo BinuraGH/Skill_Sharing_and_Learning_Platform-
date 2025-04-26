@@ -1,11 +1,14 @@
 package com.paf.backend.document;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Document(collection = "progressupdates")
+
 public class ProgressUpdate {
     @Id
     private String id;
@@ -13,20 +16,17 @@ public class ProgressUpdate {
     private String title;
     private String caption;
     private String status;
-    private Date createdAt;
-    private Date updatedAt;
+
     private List<String> imgLink;
     private List<String> likedBy;
 
     public ProgressUpdate(){}
 
-    public ProgressUpdate(String userId, String title, String caption, String status,  Date createdAt, Date updatedAt, List<String> imgLink, List<String> likedBy){
+    public ProgressUpdate(String userId, String title, String caption, String status, List<String> imgLink, List<String> likedBy){
         this.userId = userId;
         this.title = title;
         this.caption = caption;
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
         this.imgLink = imgLink;
         this.likedBy = likedBy;
     }
@@ -49,14 +49,6 @@ public class ProgressUpdate {
 
     public String getStatus(){
         return status;
-    }
-
-    public Date getCreatedAt(){
-        return createdAt;
-    }
-
-    public Date getUpdatedAt(){
-        return updatedAt;
     }
 
     public List<String> getImgLink(){
@@ -87,20 +79,17 @@ public class ProgressUpdate {
         this.status = status;
     }
 
-    public void setCreatedAt(Date createdAt){
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt){
-        this.updatedAt = updatedAt;
-    }
-
     public void setImgLink(List<String> imgLink){
         this.imgLink = imgLink;
     }
 
     public void setLikedBy(List<String> likedBy){
         this.likedBy = likedBy;
+    }
+
+    public void setDateTime(LocalDateTime now) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setDateTime'");
     }
 }
 

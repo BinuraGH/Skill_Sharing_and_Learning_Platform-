@@ -1,5 +1,5 @@
 package com.paf.backend.service;
-import java.sql.Date;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +25,6 @@ public class ProgressUpdateService {
             dto.getTitle(),
             dto.getCaption(),
             "In Progress",  // default status
-            dto.getCreatedAt(),
-            dto.getUpdatedAt(),
             dto.getImgLink(),
             dto.getLikedBy()
         );
@@ -47,26 +45,35 @@ public class ProgressUpdateService {
     }
 
     // ✅ Update a progress update by ID
-     public ResponseEntity<?> updatePostById(String id,ProgressUpdate post){
-        Optional<ProgressUpdate> existingPost =  repository.findById(id);
-        if(existingPost.isPresent()){
-            ProgressUpdate updatePost = existingPost.get();
-            if(post.getCaption() != null) {
-                updatePost.setCaption(post.getCaption());
+    public ResponseEntity<?> updateProgressUpdate(String id, ProgressUpdateDto dto) {
+        Optional<ProgressUpdate> existingUpdate = repository.findById(id);
+    
+        if (existingUpdate.isPresent()) {
+            ProgressUpdate updateProgress = existingUpdate.get();
+    
+            // Validate that at least one field is being updated
+            if (dto.getTitle() == null && dto.getCaption() == null &&
+                dto.getLikedBy() == null && dto.getImgLink() == null) {
+                return new ResponseEntity<>("No fields provided to update", HttpStatus.BAD_REQUEST);
             }
-            if(post.getImgLink() != null) {
-                updatePost.setImgLink(post.getImgLink());
-            }
-            updatePost.setUpdatedAt(new Date(System.currentTimeMillis()));
-            return new ResponseEntity<>(repository.save(updatePost), HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("Post Update Error",HttpStatus.NOT_FOUND);
+    
+            // Only update fields if not null
+            if (dto.getTitle() != null) updateProgress.setTitle(dto.getTitle());
+            if (dto.getCaption() != null) updateProgress.setCaption(dto.getCaption());
+            if (dto.getImgLink() != null) updateProgress.setImgLink(dto.getImgLink());
+            if (dto.getLikedBy() != null) updateProgress.setLikedBy(dto.getLikedBy());
+    
+            // updatedAt will auto update because of @LastModifiedDate!
+    
+            return new ResponseEntity<>(repository.save(updateProgress), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Progress Update Error: Not Found", HttpStatus.NOT_FOUND);
         }
     }
     
-    
- 
 
+
+    
     // ✅ Delete a progress update
         public boolean deleteProgressUpdate(String id) {
         Optional<ProgressUpdate> optional = repository.findById(id);

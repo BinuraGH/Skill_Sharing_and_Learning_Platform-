@@ -2,6 +2,7 @@ package com.paf.backend.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -42,11 +43,13 @@ public class ProgressUpdateController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProgressUpdate(@PathVariable String id, @RequestBody ProgressUpdate post){
-        return service.updatePostById(id, post);
+    public ResponseEntity<?> updateProgressUpdate(@PathVariable String id, @RequestBody ProgressUpdateDto dto) {
+        return service.updateProgressUpdate(id, dto);
     }
     
+    
 
+    
     @DeleteMapping("/{id}")
     public String deleteProgressUpdate(@PathVariable String id) {
     boolean deleted = service.deleteProgressUpdate(id);
