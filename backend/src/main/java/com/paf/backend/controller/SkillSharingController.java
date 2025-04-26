@@ -49,8 +49,14 @@ public class SkillSharingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@PathVariable String id) {
         boolean deleted = service.deleteSkillSharing(id);
-        return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+        if (deleted) {
+            String message = "SkillSharing with ID " + id + " deleted successfully.";
+            return ResponseEntity.ok(message);
+        } else {
+            return ResponseEntity.status(404).body("SkillSharing with ID " + id + " not found.");
+        }
     }
+
 }
