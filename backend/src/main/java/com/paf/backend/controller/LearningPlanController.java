@@ -1,37 +1,33 @@
 package com.paf.backend.controller;
 
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.paf.backend.document.LearningPlan;
 import com.paf.backend.dto.LearningPlanDto;
 import com.paf.backend.dto.LearningPlanWithProgressDto;
 import com.paf.backend.service.LearningPlanService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/plans")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class LearningPlanController {
 
-    @Autowired
-    private LearningPlanService service;
+    private final LearningPlanService service;
 
     @PostMapping
-    public LearningPlan createPlan(@RequestBody LearningPlanDto dto) {
-        return service.createPlan(dto);
+    public LearningPlan createPlan(@RequestBody LearningPlanDto learndto) {
+        return service.createPlan(learndto);
+    }
+
+    @GetMapping
+    public List<LearningPlan> getAllPlans() {
+        return service.getAllPlans();
     }
 
     @GetMapping("/user/{userId}")
@@ -41,20 +37,28 @@ public class LearningPlanController {
 
     @GetMapping("/{id}")
     public LearningPlan getPlan(@PathVariable String id) {
-        return service.getPlan(id).orElse(null);
+        return service.getPlan(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Plan not found"));
     }
 
     @PutMapping("/{id}")
-    public LearningPlan updatePlan(@PathVariable String id, @RequestBody LearningPlanDto dto) {
+    public ResponseEntity<?> updatePlan(@PathVariable String id, @RequestBody LearningPlanDto dto) {
         return service.updatePlan(id, dto);
     }
 
+    // @DeleteMapping("/{id}")
+    // public void deletePlan(@PathVariable String id,
+    //                        @RequestParam String requestingUserId) {
+    //     service.deletePlan(id, requestingUserId);
+    // }
     @DeleteMapping("/{id}")
     public void deletePlan(@PathVariable String id) {
         service.deletePlan(id);
     }
+
     @PatchMapping("/{planId}/topics/{index}/complete")
-    public LearningPlan markTopicAsComplete(@PathVariable String planId, @PathVariable int index) {
+    public LearningPlan markTopicAsComplete(@PathVariable String planId,
+                                            @PathVariable int index) {
         return service.markTopicCompleted(planId, index);
     }
 
@@ -63,4 +67,16 @@ public class LearningPlanController {
         return service.getPlanWithProgress(id);
     }
 
+    @GetMapping("/filter")
+    public List<LearningPlan> filterPlans(@RequestParam(required = false) Boolean isPaid) {
+        if (isPaid == null) {
+            return service.getAllPlans();
+        }
+        return service.getPlansByPaymentStatus(isPaid);
+    }
+
+    @GetMapping("/followed/{userId}")
+    public List<LearningPlan> getPlansByFollowedUsers(@PathVariable String userId) {
+        return service.getPlansByFollowedUsers(userId);
+    }
 }
