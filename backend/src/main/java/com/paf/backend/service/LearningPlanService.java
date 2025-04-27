@@ -73,14 +73,21 @@ public class LearningPlanService {
         }
     }
 
-    public void deletePlan(String id, String requestingUserId) {
+    // public void deletePlan(String id, String requestingUserId) {
+    //     LearningPlan plan = repository.findById(id)
+    //             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Plan not found"));
+
+    //     if (!plan.getUserId().equals(requestingUserId)) {
+    //         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorized to delete this plan");
+    //     }
+
+    //     repository.deleteById(id);
+    // }
+
+    public void deletePlan(String id) {
         LearningPlan plan = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Plan not found"));
-
-        if (!plan.getUserId().equals(requestingUserId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not authorized to delete this plan");
-        }
-
+    
         repository.deleteById(id);
     }
 

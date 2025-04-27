@@ -46,10 +46,14 @@ public class LearningPlanController {
         return service.updatePlan(id, dto);
     }
 
+    // @DeleteMapping("/{id}")
+    // public void deletePlan(@PathVariable String id,
+    //                        @RequestParam String requestingUserId) {
+    //     service.deletePlan(id, requestingUserId);
+    // }
     @DeleteMapping("/{id}")
-    public void deletePlan(@PathVariable String id,
-                           @RequestParam String requestingUserId) {
-        service.deletePlan(id, requestingUserId);
+    public void deletePlan(@PathVariable String id) {
+        service.deletePlan(id);
     }
 
     @PatchMapping("/{planId}/topics/{index}/complete")
